@@ -1,0 +1,16 @@
+{% extends 'org_base.html' %}
+{% block title %}机构介绍{% endblock %}
+{% block page_path %}机构介绍{% endblock %}
+{% block right_form %}
+<div class="right companycenter layout" >
+        <div class="head">
+            <h1>机构介绍</h1>
+        </div>
+        <div class="des">
+            {% autoescape off %}
+            <p>{{ course_org.desc }}</p>
+            {% endautoescape %}
+        </div>
+    </div>
+{% endblock %}
+
