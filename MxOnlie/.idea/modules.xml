@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/MxOnlie.iml" filepath="$PROJECT_DIR$/.idea/MxOnlie.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MxOnline.iml" filepath="$PROJECT_DIR$/.idea/MxOnline.iml" />
     </modules>
   </component>
 </project>

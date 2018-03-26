@@ -9,7 +9,8 @@ def get_context_dict(context):
     :return: dict
     """
     if isinstance(context, RequestContext):
-        ctx = context.flatten()
+        ctx = {}
+        map(ctx.update, context.dicts)
     else:
         ctx = context
     return ctx

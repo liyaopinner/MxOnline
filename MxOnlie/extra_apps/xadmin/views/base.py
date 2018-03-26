@@ -1,3 +1,4 @@
+import sys
 import copy
 import functools
 import datetime
@@ -6,6 +7,7 @@ from functools import update_wrapper
 from inspect import getargspec
 
 from django import forms
+from django.utils.encoding import force_unicode, force_text
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -16,10 +18,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.template import Context, Template
 from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.decorators import method_decorator, classonlymethod
-from django.utils.encoding import force_text, smart_text, smart_str
-from django.utils.functional import Promise
+from django.utils.encoding import force_unicode, smart_unicode, smart_str
 from django.utils.http import urlencode
 from django.utils.itercompat import is_iterable
 from django.utils.safestring import mark_safe
@@ -87,10 +87,9 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
         def method(self, context, nodes, *arg, **kwargs):
             _dict = func(self, context, nodes, *arg, **kwargs)
             from django.template.loader import get_template, select_template
-            cls_str = str if six.PY3 else basestring
             if isinstance(file_name, Template):
                 t = file_name
-            elif not isinstance(file_name, cls_str) and is_iterable(file_name):
+            elif not isinstance(file_name, basestring) and is_iterable(file_name):
                 t = select_template(file_name)
             else:
                 t = get_template(file_name)
@@ -111,19 +110,17 @@ def inclusion_tag(file_name, context_class=Context, takes_context=False):
 
 class JSONEncoder(DjangoJSONEncoder):
     def default(self, o):
-        if isinstance(o, datetime.datetime):
-            return o.strftime('%Y-%m-%d %H:%M:%S')
-        elif isinstance(o, datetime.date):
+        if isinstance(o, datetime.date):
             return o.strftime('%Y-%m-%d')
+        elif isinstance(o, datetime.datetime):
+            return o.strftime('%Y-%m-%d %H:%M:%S')
         elif isinstance(o, decimal.Decimal):
             return str(o)
-        elif isinstance(o, Promise):
-            return force_text(o)
         else:
             try:
                 return super(JSONEncoder, self).default(o)
             except Exception:
-                return smart_text(o)
+                return smart_unicode(o)
 
 
 class BaseAdminObject(object):
@@ -157,9 +154,8 @@ class BaseAdminObject(object):
         if remove is None:
             remove = []
         p = dict(self.request.GET.items()).copy()
-        arr_keys = list(p.keys())
         for r in remove:
-            for k in arr_keys:
+            for k in p.keys():
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():
@@ -176,9 +172,8 @@ class BaseAdminObject(object):
         if remove is None:
             remove = []
         p = dict(self.request.GET.items()).copy()
-        arr_keys = list(p.keys())
         for r in remove:
-            for k in arr_keys:
+            for k in p.keys():
                 if k.startswith(r):
                     del p[k]
         for k, v in new_params.items():
@@ -253,7 +248,7 @@ class BaseAdminView(BaseAdminObject, View):
         self.request = request
         self.request_method = request.method.lower()
         self.user = request.user
-        
+
         self.base_plugins = [p(self) for p in getattr(self,
                                                       "plugin_classes", [])]
 
@@ -349,7 +344,7 @@ class CommAdminView(BaseAdminView):
             app_label = model._meta.app_label
             app_icon = None
             model_dict = {
-                'title': smart_text(capfirst(model._meta.verbose_name_plural)),
+                'title': unicode(capfirst(model._meta.verbose_name_plural)),
                 'url': self.get_model_url(model, "changelist"),
                 'icon': self.get_model_icon(model),
                 'perm': self.get_model_perm(model, 'view'),
@@ -363,11 +358,11 @@ class CommAdminView(BaseAdminView):
                 nav_menu[app_key]['menus'].append(model_dict)
             else:
                 # Find app title
-                app_title = smart_text(app_label.title())
+                app_title = unicode(app_label.title())
                 if app_label.lower() in self.apps_label_title:
                     app_title = self.apps_label_title[app_label.lower()]
                 else:
-                    app_title = smart_text(apps.get_app_config(app_label).verbose_name)
+                    app_title = unicode(apps.get_app_config(app_label).verbose_name)
                 #find app icon
                 if app_label.lower() in self.apps_icons:
                     app_icon = self.apps_icons[app_label.lower()]
@@ -390,7 +385,7 @@ class CommAdminView(BaseAdminView):
         for menu in nav_menu.values():
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
-        nav_menu = list(nav_menu.values())
+        nav_menu = nav_menu.values()
         nav_menu.sort(key=lambda x: x['title'])
 
         site_menu.extend(nav_menu)
@@ -428,10 +423,10 @@ class CommAdminView(BaseAdminView):
                 return item
 
             nav_menu = [filter_item(item) for item in menus if check_menu_permission(item)]
-            nav_menu = list(filter(lambda x:x, nav_menu))
+            nav_menu = filter(lambda x:x, nav_menu)
 
             if not settings.DEBUG:
-                self.request.session['nav_menu'] = json.dumps(nav_menu, cls=JSONEncoder, ensure_ascii=False)
+                self.request.session['nav_menu'] = json.dumps(nav_menu)
                 self.request.session.modified = True
 
         def check_selected(menu, path):
@@ -500,7 +495,7 @@ class ModelAdminView(CommAdminView):
             "opts": self.opts,
             "app_label": self.app_label,
             "model_name": self.model_name,
-            "verbose_name": force_text(self.opts.verbose_name),
+            "verbose_name": force_unicode(self.opts.verbose_name),
             'model_icon': self.get_model_icon(self.model),
         }
         context = super(ModelAdminView, self).get_context()

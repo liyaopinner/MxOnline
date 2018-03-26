@@ -2,8 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction, router
 from django.http import Http404, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.utils import six
-from django.utils.encoding import force_text
+from django.utils.encoding import force_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.contrib.admin.utils import get_deleted_objects
@@ -25,7 +24,7 @@ class DeleteAdminView(ModelAdminView):
             raise PermissionDenied
 
         if self.obj is None:
-            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
+            raise Http404(_('%(name)s object with primary key %(key)r does not exist.') % {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
 
         using = router.db_for_write(self.model)
 
@@ -40,7 +39,7 @@ class DeleteAdminView(ModelAdminView):
         context = self.get_context()
 
         return TemplateResponse(request, self.delete_confirmation_template or
-                                self.get_template_list("views/model_delete_confirm.html"), context)
+                                self.get_template_list("views/model_delete_confirm.html"), context, current_app=self.admin_site.name)
 
     @csrf_protect_m
     @transaction.atomic
@@ -52,10 +51,10 @@ class DeleteAdminView(ModelAdminView):
         self.delete_model()
 
         response = self.post_response()
-        cls_str = str if six.PY3 else basestring
-        if isinstance(response, cls_str):
-            response = HttpResponseRedirect(response)
-        return response
+        if isinstance(response, basestring):
+            return HttpResponseRedirect(response)
+        else:
+            return response
 
     @filter_hook
     def delete_model(self):
@@ -69,7 +68,7 @@ class DeleteAdminView(ModelAdminView):
     def get_context(self):
         if self.perms_needed or self.protected:
             title = _("Cannot delete %(name)s") % {"name":
-                                                   force_text(self.opts.verbose_name)}
+                                                   force_unicode(self.opts.verbose_name)}
         else:
             title = _("Are you sure?")
 
@@ -88,7 +87,7 @@ class DeleteAdminView(ModelAdminView):
     def get_breadcrumb(self):
         bcs = super(DeleteAdminView, self).get_breadcrumb()
         bcs.append({
-            'title': force_text(self.obj),
+            'title': force_unicode(self.obj),
             'url': self.get_object_url(self.obj)
         })
         item = {'title': _('Delete')}
@@ -102,7 +101,7 @@ class DeleteAdminView(ModelAdminView):
     def post_response(self):
 
         self.message_user(_('The %(name)s "%(obj)s" was deleted successfully.') %
-                          {'name': force_text(self.opts.verbose_name), 'obj': force_text(self.obj)}, 'success')
+                          {'name': force_unicode(self.opts.verbose_name), 'obj': force_unicode(self.obj)}, 'success')
 
         if not self.has_view_permission():
             return self.get_admin_url('index')

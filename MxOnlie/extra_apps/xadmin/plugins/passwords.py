@@ -27,7 +27,8 @@ class ResetPasswordSendView(BaseAdminView):
         context = super(ResetPasswordSendView, self).get_context()
         context['form'] = kwargs.get('form', self.password_reset_form())
 
-        return TemplateResponse(request, self.password_reset_template, context)
+        return TemplateResponse(request, self.password_reset_template, context,
+                                current_app=self.admin_site.name)
 
     @csrf_protect_m
     def post(self, request, *args, **kwargs):
@@ -49,7 +50,8 @@ class ResetPasswordSendView(BaseAdminView):
 
             form.save(**opts)
             context = super(ResetPasswordSendView, self).get_context()
-            return TemplateResponse(request, self.password_reset_done_template, context)
+            return TemplateResponse(request, self.password_reset_done_template, context,
+                                current_app=self.admin_site.name)
         else:
             return self.get(request, form=form)
 
@@ -105,7 +107,8 @@ class ResetPasswordCompleteView(BaseAdminView):
         context = super(ResetPasswordCompleteView, self).get_context()
         context['login_url'] = self.get_admin_url('index')
 
-        return TemplateResponse(request, self.password_reset_complete_template, context)
+        return TemplateResponse(request, self.password_reset_complete_template, context,
+                                current_app=self.admin_site.name)
 
 site.register_view(r'^xadmin/password_reset/complete/$', ResetPasswordCompleteView, name='xadmin_password_reset_complete')
 

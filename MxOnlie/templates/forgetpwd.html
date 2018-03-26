@@ -41,6 +41,7 @@
             <input type="hidden" name="mobile" id="jsInpResetMobil" />
             <input id="jsSetNewPwdBtn" type="button" value="提交" />
         </div>
+        <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />
     </form>
 </div>
 <div class="bg" id="dialogBg"></div>
@@ -78,6 +79,7 @@
             <div class="fl form-box">
                 <h2>忘记密码</h2>
                 <form id="jsFindPwdForm" method="post" action="{% url 'forget_pwd' %}" autocomplete="off">
+                    <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />
                     <div class="form-group marb20 {% if forget_form.errors.email %}errorput{% endif %}">
                         <label>帐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</label>
                         <input type="text" id="account" name="email" value="{{ forget_form.email.value }}" placeholder="邮箱" />

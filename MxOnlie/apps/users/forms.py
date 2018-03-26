@@ -36,5 +36,5 @@ class UploadImageForm(forms.ModelForm):
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['nick_name', 'gender', 'birthday', 'address', 'mobile']
+        fields = ['nick_name', 'gender', 'birday', 'address', 'mobile']
 
