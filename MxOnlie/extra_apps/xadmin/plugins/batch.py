@@ -5,7 +5,7 @@ from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.forms.models import modelform_factory
 from django.template.response import TemplateResponse
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, ugettext_lazy
 from xadmin.layout import FormHelper, Layout, Fieldset, Container, Col
@@ -129,9 +129,9 @@ class BatchChangeAction(BaseActionView):
         self.form_obj.helper = helper
         count = len(queryset)
         if count == 1:
-            objects_name = force_unicode(self.opts.verbose_name)
+            objects_name = force_text(self.opts.verbose_name)
         else:
-            objects_name = force_unicode(self.opts.verbose_name_plural)
+            objects_name = force_text(self.opts.verbose_name_plural)
 
         context = self.get_context()
         context.update({
@@ -146,7 +146,7 @@ class BatchChangeAction(BaseActionView):
         })
 
         return TemplateResponse(self.request, self.batch_change_form_template or
-                                self.get_template_list('views/batch_change_form.html'), context, current_app=self.admin_site.name)
+                                self.get_template_list('views/batch_change_form.html'), context)
 
     @filter_hook
     def get_media(self):

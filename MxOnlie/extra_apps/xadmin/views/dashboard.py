@@ -9,7 +9,7 @@ from django.forms.utils import flatatt
 from django.template import loader
 from django.http import Http404
 from django.test.client import RequestFactory
-from django.utils.encoding import force_unicode, smart_unicode
+from django.utils.encoding import force_text, smart_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -23,7 +23,7 @@ from xadmin.sites import site
 from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_protect_m
 from xadmin.views.edit import CreateAdminView
 from xadmin.views.list import ListAdminView
-from xadmin.util import unquote
+from xadmin.util import unquote, DJANGO_11
 import copy
 
 
@@ -36,15 +36,18 @@ class WidgetTypeSelect(forms.Widget):
     def render(self, name, value, attrs=None):
         if value is None:
             value = ''
-        final_attrs = self.build_attrs(attrs, name=name)
+        if DJANGO_11:
+            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
+        else:
+            final_attrs = self.build_attrs(attrs, name=name)
         final_attrs['class'] = 'nav nav-pills nav-stacked'
         output = [u'<ul%s>' % flatatt(final_attrs)]
-        options = self.render_options(force_unicode(value), final_attrs['id'])
+        options = self.render_options(force_text(value), final_attrs['id'])
         if options:
             output.append(options)
         output.append(u'</ul>')
         output.append('<input type="hidden" id="%s_input" name="%s" value="%s"/>' %
-                     (final_attrs['id'], name, force_unicode(value)))
+                      (final_attrs['id'], name, force_text(value)))
         return mark_safe(u'\n'.join(output))
 
     def render_option(self, selected_choice, widget, id):
@@ -305,7 +308,7 @@ class ModelChoiceField(forms.ChoiceField):
     def valid_value(self, value):
         value = self.prepare_value(value)
         for k, v in self.choices:
-            if value == smart_unicode(k):
+            if value == smart_text(k):
                 return True
         return False
 
@@ -337,7 +340,7 @@ class ModelBaseWidget(BaseWidget):
     def model_admin_url(self, name, *args, **kwargs):
         return reverse(
             "%s:%s_%s_%s" % (self.admin_site.app_name, self.app_label,
-            self.model_name, name), args=args, kwargs=kwargs)
+                             self.model_name, name), args=args, kwargs=kwargs)
 
 
 class PartialBaseWidget(BaseWidget):
@@ -558,7 +561,7 @@ class Dashboard(CommAdminView):
                                 widget = user_widgets.get(int(wid))
                                 if widget:
                                     ws.append(self.get_widget(widget))
-                            except Exception, e:
+                            except Exception as e:
                                 import logging
                                 logging.error(e, exc_info=True)
                         widgets.append(ws)
@@ -637,7 +640,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
 
     @filter_hook
     def get_title(self):
-        return self.title % force_unicode(self.obj)
+        return self.title % force_text(self.obj)
 
     def init_request(self, object_id, *args, **kwargs):
         self.obj = self.get_object(unquote(object_id))
@@ -647,7 +650,7 @@ class ModelDashboard(Dashboard, ModelAdminView):
 
         if self.obj is None:
             raise Http404(_('%(name)s object with primary key %(key)r does not exist.') %
-                          {'name': force_unicode(self.opts.verbose_name), 'key': escape(object_id)})
+                          {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
 
     @filter_hook
     def get_context(self):

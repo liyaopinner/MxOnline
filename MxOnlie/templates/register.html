@@ -134,7 +134,6 @@
                 <!--</div>-->
                 <div class="tab-form">
                     <form id="email_register_form" method="post" action="{% url 'register' %}" autocomplete="off">
-                        <input type='hidden' name='csrfmiddlewaretoken' value='gTZljXgnpvxn0fKZ1XkWrM1PrCGSjiCZ' />
                         <div class="form-group marb20 {% if register_form.errors.email %}errorput{% endif %}">
                             <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</label>
                             <input  type="text" id="id_email" name="email" value="{{ register_form.email.value }}" placeholder="请输入您的邮箱地址" />

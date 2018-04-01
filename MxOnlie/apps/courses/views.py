@@ -135,7 +135,7 @@ class AddComentsView(View):
 
         course_id = request.POST.get("course_id", 0)
         comments = request.POST.get("comments", "")
-        if course_id >0 and comments:
+        if int(course_id) >0 and comments:
             course_comments = CourseComments()
             course = Course.objects.get(id=int(course_id))
             course_comments.course = course
