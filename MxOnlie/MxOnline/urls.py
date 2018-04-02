@@ -39,10 +39,10 @@ urlpatterns = [
     url(r'^modify_pwd/$', ModifyPwdView.as_view(), name="modify_pwd"),
 
     #课程机构url配置
-    url(r'^org/', include('organization.urls', namespace="org")),
+    url(r'^org/', include(('organization.urls','organization'), namespace="org")),
 
     #课程相关url配置
-    url(r'^course/', include('courses.urls', namespace="course")),
+    url(r'^course/', include(('courses.urls','courses'), namespace="course")),
 
     #配置上传文件的访问处理函数
     url(r'^media/(?P<path>.*)$',  serve, {"document_root":MEDIA_ROOT}),
@@ -50,10 +50,10 @@ urlpatterns = [
     # url(r'^static/(?P<path>.*)$',  serve, {"document_root":STATIC_ROOT}),
 
     #课程相关url配置
-    url(r'^users/', include('users.urls', namespace="users")),
+    url(r'^users/', include(('users.urls', 'users'), namespace="users")),
 
     #富文本相关url
-    url(r'^ueditor/',include('DjangoUeditor.urls' )),
+    url(r'^ueditor/',include(('DjangoUeditor.urls', 'ueditor'), namespace="ueditor")),
 ]
 
 #全局404页面配置

@@ -14,7 +14,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.utils.translation import ugettext as _
 
-from .util import vendor, DJANGO_11
+from .util import vendor
 
 
 class AdminDateWidget(forms.DateInput):
@@ -24,7 +24,7 @@ class AdminDateWidget(forms.DateInput):
         return vendor('datepicker.js', 'datepicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'date-field', 'size': '10'}
+        final_attrs = {'class': 'date-field form-control', 'size': '10'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminDateWidget, self).__init__(attrs=final_attrs, format=format)
@@ -42,7 +42,7 @@ class AdminTimeWidget(forms.TimeInput):
         return vendor('datepicker.js', 'clockpicker.js', 'clockpicker.css', 'xadmin.widget.datetime.js')
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'time-field', 'size': '8'}
+        final_attrs = {'class': 'time-field form-control', 'size': '8'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminTimeWidget, self).__init__(attrs=final_attrs, format=format)
@@ -72,15 +72,13 @@ class AdminSplitDateTime(forms.SplitDateTimeWidget):
         forms.MultiWidget.__init__(self, widgets, attrs)
 
     def render(self, name, value, attrs=None):
-        if DJANGO_11:
-            input_html = [ht for ht in super(AdminSplitDateTime, self).render(name, value, attrs).split('\n') if ht != '']
-            # return input_html
-            return mark_safe('<div class="datetime clearfix"><div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>%s'
-                             '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>'
-                             '<div class="input-group time bootstrap-clockpicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
-                             '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div></div>' % (input_html[0], _(u'Today'), input_html[1], _(u'Now')))
-        else:
-            return super(AdminSplitDateTime, self).render(name, value, attrs)
+        input_html = [ht for ht in super(AdminSplitDateTime, self).render(name, value, attrs).split('/><') if ht != '']
+        input_html[0] = input_html[0] + "/>"
+        input_html[1] = "<" + input_html[1]
+        return mark_safe('<div class="datetime clearfix"><div class="input-group date bootstrap-datepicker"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>%s'
+                         '<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div>'
+                         '<div class="input-group time bootstrap-clockpicker"><span class="input-group-addon"><i class="fa fa-clock-o">'
+                         '</i></span>%s<span class="input-group-btn"><button class="btn btn-default" type="button">%s</button></span></div></div>' % (input_html[0], _(u'Today'), input_html[1], _(u'Now')))
 
     def format_output(self, rendered_widgets):
         return mark_safe(u'<div class="datetime clearfix">%s%s</div>' %
