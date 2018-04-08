@@ -10,6 +10,7 @@ from xadmin.models import UserSettings
 from xadmin.views import BaseAdminPlugin, BaseAdminView
 from xadmin.util import static, json
 import six
+import requests
 if six.PY2:
     import urllib
 else:
@@ -71,15 +72,24 @@ class ThemePlugin(BaseAdminPlugin):
             else:
                 ex_themes = []
                 try:
-                    h = httplib2.Http()
-                    resp, content = h.request("https://bootswatch.com/api/3.json", 'GET', '',
-                        headers={"Accept": "application/json", "User-Agent": self.request.META['HTTP_USER_AGENT']})
-                    if six.PY3:
-                        content = content.decode()
-                    watch_themes = json.loads(content)['themes']
+                    flag = False  # 假如为True使用原来的代码，假如为Flase，使用requests库来访问
+                    if flag:
+                        h = httplib2.Http()
+                        resp, content = h.request("http://bootswatch.com/api/3.json", 'GET', '',
+                                                  headers={"Accept": "application/json",
+                                                           "User-Agent": self.request.META['HTTP_USER_AGENT']})
+                        if six.PY3:
+                            content = content.decode()
+                        watch_themes = json.loads(content)['themes']
+                    else:
+                        content = requests.get("https://bootswatch.com/api/3.json")
+                        # if six.PY3:
+                        #     content = content.text.decode()
+                        watch_themes = json.loads(content.text)['themes']
+
                     ex_themes.extend([
                         {'name': t['name'], 'description': t['description'],
-                            'css': t['cssMin'], 'thumbnail': t['thumbnail']}
+                         'css': t['cssMin'], 'thumbnail': t['thumbnail']}
                         for t in watch_themes])
                 except Exception as e:
                     print(e)
