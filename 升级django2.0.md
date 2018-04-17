@@ -3,7 +3,7 @@ django2.0开始只支持python3， 所以升级前确保之前是用django1.11�
     1. 所有model的外键需要加上on_delete的行为 改为 on_delete=models.CASCADE
 
         此处说明一下如果改为 models.SET_NULL需要将外键设置为可以为NULL，不然启动的时候会报错
-        并说明一下CASCADE、SET_NULL等参数的意思
+        并说明一下CASCADE表示级联删除
 
     2. 修改所有from django.core.urlresolvers import NoReverseMatch, reverse
     
