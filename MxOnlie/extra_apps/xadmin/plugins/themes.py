@@ -16,6 +16,7 @@ if six.PY2:
 else:
     import urllib.parse
 
+
 THEME_CACHE_KEY = 'xadmin_themes'
 
 
