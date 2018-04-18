@@ -8,6 +8,7 @@ django2.0开始只支持python3， 所以升级前确保之前是用django1.11�
             django-formtools
             django-import-export
             django-simple-captcha
+            django-pure-pagination
     2. 拷贝django2分支下的xadmin和djangoueditor源码
        
     3. 所有model的外键需要加上on_delete的行为 改为 on_delete=models.CASCADE
