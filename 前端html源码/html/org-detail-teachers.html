@@ -175,9 +175,10 @@ function add_fav(current_elem, fav_id, fav_type){
         },
     });
 }
-
-$('.collectionbtn').on('click', function(){
-    add_fav($(this), 1, 2);
+$(document).ready(function() {
+    $('.collectionbtn').on('click', function () {
+        add_fav($(this), 1, 2);
+    });
 });
 
 $(function(){
@@ -198,21 +199,23 @@ $(function(){
                 };
     $precision.raty(option);
 
-    $('.jsFavBtn').on('click', function(){
-        var type = $(this).attr('data-fav-type');
-        if(type == '1'){
-            favPraise($(this), 'fav' ,1 , '收藏');
+    $(document).ready(function() {
+        $('.jsFavBtn').on('click', function () {
+            var type = $(this).attr('data-fav-type');
+            if (type == '1') {
+                favPraise($(this), 'fav', 1, '收藏');
 
-        }else if(type == '3'){
-            favPraise($(this), 'fav' ,3 );
+            } else if (type == '3') {
+                favPraise($(this), 'fav', 3);
 
-        }else if(type == '11'){
-            favPraise($(this), 'pra', 1);
+            } else if (type == '11') {
+                favPraise($(this), 'pra', 1);
 
-        }else if(type == '4'){
-            favPraise($(this), 'fav' ,4 );
+            } else if (type == '4') {
+                favPraise($(this), 'fav', 4);
 
-        }
+            }
+        });
     });
 })
 </script>
