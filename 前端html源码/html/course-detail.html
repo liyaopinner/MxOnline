@@ -305,15 +305,17 @@ function add_fav(current_elem, fav_id, fav_type){
         },
     });
 }
-
-$('#jsLeftBtn').on('click', function(){
-    add_fav($(this), 10, 1);
+$(document).ready(function() {
+    $('#jsLeftBtn').on('click', function () {
+        add_fav($(this), 10, 1);
+    });
 });
 
-$('#jsRightBtn').on('click', function(){
-    add_fav($(this), 2, 2);
+$(document).ready(function() {
+	$('#jsRightBtn').on('click', function(){
+		add_fav($(this), 2, 2);
+	});
 });
-
 
 </script>
 
