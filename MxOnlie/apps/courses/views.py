@@ -115,7 +115,7 @@ class CommentsView(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(id=int(course_id))
         all_resources = CourseResource.objects.filter(course=course)
-        all_comments = CourseComments.objects.all().order_by("-id")
+        all_comments = CourseComments.objects.filter(course=course).order_by("-id")
         return render(request, "course-comment.html", {
             "course":course,
             "course_resources":all_resources,
