@@ -307,11 +307,12 @@
 <script src="../js/deco-user.js"></script>
 
 <script type="text/javascript">
-    $('.jsDeleteFav_course').on('click', function(){
-        var _this = $(this),
-            favid = _this.attr('data-favid');
-        alert(favid)
-        $.ajax({
+    $(document).ready(function() {
+        $('.jsDeleteFav_course').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            alert(favid)
+            $.ajax({
                 cache: false,
                 type: "POST",
                 url: "/org/add_fav/",
@@ -321,50 +322,53 @@
                     csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
                 },
                 async: true,
-                success: function(data) {
+                success: function (data) {
                     Dml.fun.winReload();
                 }
             });
+        });
+    });
+    $(document).ready(function() {
+        $('.jsDeleteFav_teacher').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/org/add_fav/",
+                data: {
+                    fav_type: 3,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
     });
 
-    $('.jsDeleteFav_teacher').on('click', function(){
+    $(document).ready(function() {
+        $('.jsDeleteFav_org').on('click', function () {
             var _this = $(this),
                 favid = _this.attr('data-favid');
             $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/org/add_fav/",
-                    data: {
-                        fav_type: 3,
-                        fav_id: favid,
-                        csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
-                    },
-                    async: true,
-                    success: function(data) {
-                        Dml.fun.winReload();
-                    }
-                });
+                cache: false,
+                type: "POST",
+                url: "/org/add_fav/",
+                data: {
+                    fav_type: 2,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
         });
-
-
-    $('.jsDeleteFav_org').on('click', function(){
-            var _this = $(this),
-                favid = _this.attr('data-favid');
-            $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/org/add_fav/",
-                    data: {
-                        fav_type: 2,
-                        fav_id: favid,
-                        csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
-                    },
-                    async: true,
-                    success: function(data) {
-                        Dml.fun.winReload();
-                    }
-                });
-        });
+    });
 </script>
 
 
