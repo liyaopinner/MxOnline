@@ -82,7 +82,7 @@
                     <input type='hidden' name='csrfmiddlewaretoken' value='mymQDzHWl2REXIfPMg2mJaLqDfaS1sD5' />
                     <div class="form-group marb20 {% if forget_form.errors.email %}errorput{% endif %}">
                         <label>帐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</label>
-                        <input type="text" id="account" name="email" value="{{ forget_form.email.value }}" placeholder="邮箱" />
+                        <input type="text" id="account" name="email" value="{{ forget_form.email.value|default_if_none:'' }}" placeholder="邮箱" />
                     </div>
                     <div class="form-group captcha1 marb38">
                         <label>验&nbsp;证&nbsp;码</label>
@@ -91,7 +91,7 @@
                     <div class="error btns" id="jsForgetTips">{% for key,error in forget_form.errors.items %}{{ error }}{% endfor %}{{ msg }}</div>
                     <input type="hidden" name="sms_type" value="1">
                     <input class="btn btn-green" id="jsFindPwdBtn" type="submit" value="提交" />
-                    <p class="form-p" style="bottom:40px;">您还可以<a href="login.html"> [直接登录]</a></p>
+                    <p class="form-p" style="bottom:40px;">您还可以<a href="{% url 'login' %}"> [直接登录]</a></p>
                 {% csrf_token %}
                 </form>
             </div>

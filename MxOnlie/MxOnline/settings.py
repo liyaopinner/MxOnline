@@ -97,8 +97,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "mxonline",
         'USER': 'root',
-        'PASSWORD': "root",
-        'HOST': "127.0.0.1"
+        'PASSWORD': "admin123",
+        'HOST': "39.104.13.197"
     }
 }
 
@@ -145,10 +145,10 @@ STATICFILES_DIRS = (
 )
 
 EMAIL_HOST = "smtp.sina.com"
-EMAIL_PORT = 25
+EMAIL_PORT = 587
 EMAIL_HOST_USER = "projectsedu@sina.com"
-EMAIL_HOST_PASSWORD = "admin123"
-EMAIL_USE_TLS= False
+EMAIL_HOST_PASSWORD = "admin321"
+EMAIL_USE_TLS=True
 EMAIL_FROM = "projectsedu@sina.com"
 
 MEDIA_URL = '/media/'

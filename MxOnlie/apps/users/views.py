@@ -71,7 +71,7 @@ class RegisterView(View):
             user_message.save()
 
             send_register_email(user_name, "register")
-            return render(request, "login.html")
+            return render(request, "login.html", {"success_msg":"邮件已发送请查收(有可能进入垃圾邮件)"})
         else:
             return render(request, "register.html", {"register_form":register_form})
 

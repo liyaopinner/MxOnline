@@ -13,7 +13,7 @@
 <body>
 <div class="loginbox dialogbox">
     <h1>账号登录</h1>
-    <div class="close jsCloseDialog"><img src="../images/dig_close.png"/></div>
+    <div class="close jsCloseDialog"><img src="/static/images/dig_close.png"/></div>
     <div class="cont">
         <form id="jsLoginForm" autocomplete="off">
             <div class="box">
@@ -42,7 +42,7 @@
     <!--提示弹出框-->
     <div class="successbox dialogbox" id="jsSuccessTips">
         <h1>成功提交</h1>
-        <div class="close jsCloseDialog"><img src="../images/dig_close.png"/></div>
+        <div class="close jsCloseDialog"><img src="/static/images/dig_close.png"/></div>
         <div class="cont">
             <h2>您的需求提交成功！</h2>
             <p></p>
@@ -50,9 +50,9 @@
     </div>
     <div  class="noactivebox dialogbox" id="jsUnactiveForm" >
         <h1>邮件验证提示</h1>
-        <div class="close jsCloseDialog"><img src="../images/dig_close.png"/></div>
+        <div class="close jsCloseDialog"><img src="/static/images/dig_close.png"/></div>
         <div class="center">
-            <img src="../images/send.png"/>
+            <img src="/static/images/send.png"/>
             <p>我们已经向您的邮箱<span class="green" id="jsEmailToActive">12@13.com</span>发送了邮件，<br/>为保证您的账号安全，请及时验证邮箱</p>
             <p class="a"><a class="btn" id="jsGoToEmail" target="_blank" href="http://mail.qq.com">去邮箱验证</a></p>
             <p class="zy_success upmove"></p>
@@ -87,11 +87,11 @@
                 <div class="imgslide">
                     <ul class="imgs">
 
-                        <li><a href=""><img width="483" height="472" src="../images/57a801860001c34b12000460.jpg" /></a></li>
+                        <li><a href=""><img width="483" height="472" src="/static/images/57a801860001c34b12000460.jpg" /></a></li>
 
-                        <li><a href=""><img width="483" height="472" src="../images/57a801860001c34b12000460.jpg" /></a></li>
+                        <li><a href=""><img width="483" height="472" src="/static/images/57a801860001c34b12000460.jpg" /></a></li>
 
-                        <li><a href=""><img width="483" height="472" src="../images/57a801860001c34b12000460.jpg" /></a></li>
+                        <li><a href=""><img width="483" height="472" src="/static/images/57a801860001c34b12000460.jpg" /></a></li>
 
                     </ul>
                 </div>
@@ -137,11 +137,11 @@
                         <input type='hidden' name='csrfmiddlewaretoken' value='gTZljXgnpvxn0fKZ1XkWrM1PrCGSjiCZ' />
                         <div class="form-group marb20 {% if register_form.errors.email %}errorput{% endif %}">
                             <label>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</label>
-                            <input  type="text" id="id_email" name="email" value="{{ register_form.email.value }}" placeholder="请输入您的邮箱地址" />
+                            <input  type="text" id="id_email" name="email" value="{{ register_form.email.value|default_if_none:'' }}" placeholder="请输入您的邮箱地址" />
                         </div>
                         <div class="form-group marb8 {% if register_form.errors.password %}errorput{% endif %}">
                             <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
-                            <input type="password" id="id_password" name="password"  value="{{ register_form.password.value }}" placeholder="请输入6-20位非中文字符密码" />
+                            <input type="password" id="id_password" name="password"  value="{{ register_form.password.value|default_if_none:'' }}" placeholder="请输入6-20位非中文字符密码" />
                         </div>
                         <div class="form-group marb8 captcha1 {% if register_form.errors.captcha %}errorput{% endif %}">
                             <label>验&nbsp;证&nbsp;码</label>
@@ -154,7 +154,7 @@
                     {% csrf_token %}
                     </form>
                 </div>
-                <p class="form-p">已有账号？<a href="login.html">[立即登录]</a></p>
+                <p class="form-p">已有账号？<a href="{% url 'login' %}">[立即登录]</a></p>
             </div>
         </div>
     </div>
