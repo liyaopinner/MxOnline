@@ -5,9 +5,9 @@ from django.contrib.admin.widgets import AdminTextareaWidget
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.http import urlencode
-# import settings as USettings
-from . import settings as uSettings
+from . import settings as USettings
 from .commands import *
+from django.utils.six import string_types
 
 # 修正输入的文件路径,输入路径的标准格式：abc,不需要前后置的路径符号
 # 如果输入的路径参数是一个函数则执行，否则可以拉接受时间格式化，用来生成如file20121208.bmp的重命名格式
@@ -67,100 +67,63 @@ class UEditorWidget(forms.Textarea):
             'initialFrameHeight': height
         }
         # 以下处理工具栏设置，将normal,mini等模式名称转化为工具栏配置值
-        try:
-            if isinstance(toolbars, str):
-                if toolbars == "full":
-                    del self.ueditor_settings['toolbars']
-                else:
-                    self.ueditor_settings[
-                        "toolbars"] = USettings.TOOLBARS_SETTINGS[toolbars]
-        except:
-            pass
+        if toolbars == "full":
+            del self.ueditor_settings['toolbars']
+        elif isinstance(toolbars, string_types) and toolbars in USettings.TOOLBARS_SETTINGS:
+            self.ueditor_settings[
+                "toolbars"] = USettings.TOOLBARS_SETTINGS[toolbars]
+        else:
+            self.ueditor_settings["toolbars"] = toolbars
+            # raise ValueError('toolbars should be a string defined in DjangoUeditor.settings.TOOLBARS_SETTINGS, options are full(default), besttome, mini and normal!')
         self.ueditor_settings.update(settings)
         super(UEditorWidget, self).__init__(attrs)
 
-    # def recalc_path(self, model_inst):
-    #     """计算上传路径,允许是function"""
-    #     try:
-    #         uSettings = self.upload_settings
-    #         if self._upload_settings.get("filePathFormat", None):
-    #             uSettings['filePathFormat'] = calc_path(
-    #                 self._upload_settings['filePathFormat'], model_inst)
-    #         if self._upload_settings.get("imagePathFormat", None):
-    #             uSettings['imagePathFormat'] = calc_path(
-    #                 self._upload_settings['imagePathFormat'], model_inst)
-    #         if self._upload_settings.get("scrawlPathFormat", None):
-    #             uSettings['scrawlPathFormat'] = calc_path(
-    #                 self._upload_settings['scrawlPathFormat'], model_inst)
-    #         if self._upload_settings.get("videoPathFormat", None):
-    #             uSettings['videoPathFormat'] = calc_path(
-    #                 self._upload_settings['videoPathFormat'], model_inst),
-    #         if self._upload_settings.get("snapscreenPathFormat", None):
-    #             uSettings['snapscreenPathFormat'] = calc_path(
-    #                 self._upload_settings['snapscreenPathFormat'], model_inst)
-    #         if self._upload_settings.get("catcherPathFormat", None):
-    #             uSettings['catcherPathFormat'] = calc_path(
-    #                 self._upload_settings['catcherPathFormat'], model_inst)
-    #         if self._upload_settings.get("imageManagerListPath", None):
-    #             uSettings['imageManagerListPath'] = calc_path(
-    #                 self._upload_settings['imageManagerListPath'], model_inst)
-    #         if self._upload_settings.get("fileManagerListPath", None):
-    #             uSettings['fileManagerListPath'] = calc_path(
-    #                 self._upload_settings['fileManagerListPath'], model_inst)
-    #         # 设置默认值，未指定涂鸦、截图、远程抓图、图片目录时,默认均等于imagePath
-    #         if uSettings['imagePathFormat'] != "":
-    #             uSettings['scrawlPathFormat'] = uSettings['scrawlPathFormat'] if self._upload_settings.get(
-    #                 "scrawlPathFormat", None) else uSettings['imagePathFormat']
-    #             uSettings['videoPathFormat'] = uSettings['videoPathFormat'] if self._upload_settings.get(
-    #                 "videoPathFormat", None) else uSettings['imagePathFormat']
-    #             uSettings['snapscreenPathFormat'] = uSettings['snapscreenPathFormat'] if self._upload_settings.get(
-    #                 "snapscreenPathFormat", None) else uSettings['imagePathFormat']
-    #             uSettings['catcherPathFormat'] = uSettings['catcherPathFormat'] if self._upload_settings.get(
-    #                 "catcherPathFormat", None) else uSettings['imagePathFormat']
-    #             uSettings['imageManagerListPath'] = uSettings['imageManagerListPath'] if self._upload_settings.get(
-    #                 "imageManagerListPath", None) else uSettings['imagePathFormat']
-    #         if uSettings['filePathFormat'] != "":
-    #             uSettings['fileManagerListPath'] = uSettings['fileManagerListPath'] if self._upload_settings.get(
-    #                 "fileManagerListPath", None) else uSettings['filePathFormat']
-    #     except:
-    #         pass
     def recalc_path(self, model_inst):
         """计算上传路径,允许是function"""
         try:
             uSettings = self.upload_settings
-            if "filePathFormat" in self._upload_settings:
+            if 'filePathFormat' in self._upload_settings:
                 uSettings['filePathFormat'] = calc_path(
                     self._upload_settings['filePathFormat'], model_inst)
-            if "imagePathFormat" in self._upload_settings:
+            if 'imagePathFormat' in self._upload_settings:
                 uSettings['imagePathFormat'] = calc_path(
                     self._upload_settings['imagePathFormat'], model_inst)
-            if "scrawlPathFormat" in self._upload_settings:
+            if 'scrawlPathFormat' in self._upload_settings:
                 uSettings['scrawlPathFormat'] = calc_path(
                     self._upload_settings['scrawlPathFormat'], model_inst)
-            if "videoPathFormat" in self._upload_settings:
+            if 'videoPathFormat' in self._upload_settings:
                 uSettings['videoPathFormat'] = calc_path(
                     self._upload_settings['videoPathFormat'], model_inst),
-            if "snapscreenPathFormat" in self._upload_settings:
+            if 'snapscreenPathFormat' in self._upload_settings:
                 uSettings['snapscreenPathFormat'] = calc_path(
                     self._upload_settings['snapscreenPathFormat'], model_inst)
-            if "catcherPathFormat" in self._upload_settings:
+            if 'catcherPathFormat' in self._upload_settings:
                 uSettings['catcherPathFormat'] = calc_path(
                     self._upload_settings['catcherPathFormat'], model_inst)
-            if "imageManagerListPath" in self._upload_settings:
+            if 'imageManagerListPath' in self._upload_settings:
                 uSettings['imageManagerListPath'] = calc_path(
                     self._upload_settings['imageManagerListPath'], model_inst)
-            if "fileManagerListPath" in self._upload_settings:
+            if 'fileManagerListPath' in self._upload_settings:
                 uSettings['fileManagerListPath'] = calc_path(
                     self._upload_settings['fileManagerListPath'], model_inst)
             # 设置默认值，未指定涂鸦、截图、远程抓图、图片目录时,默认均等于imagePath
             if uSettings['imagePathFormat'] != "":
-                uSettings['scrawlPathFormat'] = uSettings['scrawlPathFormat'] if "scrawlPathFormat" in self._upload_settings else uSettings['imagePathFormat']
-                uSettings['videoPathFormat'] = uSettings['videoPathFormat'] if "videoPathFormat" in self._upload_settings else uSettings['imagePathFormat']
-                uSettings['snapscreenPathFormat'] = uSettings['snapscreenPathFormat'] if "snapscreenPathFormat" in self._upload_settings else uSettings['imagePathFormat']
-                uSettings['catcherPathFormat'] = uSettings['catcherPathFormat'] if "catcherPathFormat" in self._upload_settings else uSettings['imagePathFormat']
-                uSettings['imageManagerListPath'] = uSettings['imageManagerListPath'] if "imageManagerListPath" in self._upload_settings else uSettings['imagePathFormat']
+                default_path = uSettings['imagePathFormat']
+
+                uSettings['scrawlPathFormat'] = uSettings.get(
+                    'scrawlPathFormat', default_path)
+                uSettings['videoPathFormat'] = uSettings.get(
+                    'videoPathFormat', default_path)
+                uSettings['snapscreenPathFormat'] = uSettings.get(
+                    'snapscreenPathFormat', default_path)
+                uSettings['catcherPathFormat'] = uSettings.get(
+                    'catcherPathFormat', default_path)
+                uSettings['imageManagerListPath'] = uSettings.get(
+                    'imageManagerListPath', default_path)
+
             if uSettings['filePathFormat'] != "":
-                uSettings['fileManagerListPath'] = uSettings['fileManagerListPath'] if "fileManagerListPath" in self._upload_settings else uSettings['imagePathFormat']
+                uSettings['fileManagerListPath'] = uSettings.get(
+                    'fileManagerListPath', uSettings['filePathFormat'])
         except:
             pass
 
@@ -180,7 +143,7 @@ class UEditorWidget(forms.Textarea):
                 for cmd in self.command:
                     cmdjs = cmdjs + cmd.render(editor_id)
             else:
-                cmdis = self.command.render(editor_id)
+                cmdjs = self.command.render(editor_id)
             uSettings["commands"] = cmdjs
 
         uSettings["settings"] = self.ueditor_settings.copy()

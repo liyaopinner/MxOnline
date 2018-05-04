@@ -1,99 +1,12 @@
-# coding:utf-8
+# -*- coding: utf-8 -*-
 from django.conf import settings as gSettings  # 全局设置
 
 # 工具栏样式，可以添加任意多的模式
-TOOLBARS_SETTINGS = {"besttome": [['source',
-                                   'undo',
-                                   'redo',
-                                   'bold',
-                                   'italic',
-                                   'underline',
-                                   'forecolor',
-                                   'backcolor',
-                                   'superscript',
-                                   'subscript',
-                                   "justifyleft",
-                                   "justifycenter",
-                                   "justifyright",
-                                   "insertorderedlist",
-                                   "insertunorderedlist",
-                                   "blockquote",
-                                   'formatmatch',
-                                   "removeformat",
-                                   'autotypeset',
-                                   'inserttable',
-                                   "pasteplain",
-                                   "wordimage",
-                                   "searchreplace",
-                                   "map",
-                                   "preview",
-                                   "fullscreen"],
-                                  ['insertcode',
-                                   'paragraph',
-                                   "fontfamily",
-                                   "fontsize",
-                                   'link',
-                                   'unlink',
-                                   'insertimage',
-                                   'insertvideo',
-                                   'attachment',
-                                   'emotion',
-                                   "date",
-                                   "time"]],
-                     "mini": [['source',
-                               '|',
-                               'undo',
-                               'redo',
-                               '|',
-                               'bold',
-                               'italic',
-                               'underline',
-                               'formatmatch',
-                               'autotypeset',
-                               '|',
-                               'forecolor',
-                               'backcolor',
-                               '|',
-                               'link',
-                               'unlink',
-                               '|',
-                               'simpleupload',
-                               'attachment']],
-                     "normal": [['source',
-                                 '|',
-                                 'undo',
-                                 'redo',
-                                 '|',
-                                 'bold',
-                                 'italic',
-                                 'underline',
-                                 'removeformat',
-                                 'formatmatch',
-                                 'autotypeset',
-                                 '|',
-                                 'forecolor',
-                                 'backcolor',
-                                 '|',
-                                 'link',
-                                 'unlink',
-                                 '|',
-                                 'simpleupload',
-                                 'emotion',
-                                 'attachment',
-                                 '|',
-                                 'inserttable',
-                                 'deletetable',
-                                 'insertparagraphbeforetable',
-                                 'insertrow',
-                                 'deleterow',
-                                 'insertcol',
-                                 'deletecol',
-                                 'mergecells',
-                                 'mergeright',
-                                 'mergedown',
-                                 'splittocells',
-                                 'splittorows',
-                                 'splittocols']]}
+TOOLBARS_SETTINGS = {
+    "besttome": [['source', 'undo', 'redo', 'bold', 'italic', 'underline', 'forecolor', 'backcolor', 'superscript', 'subscript', "justifyleft", "justifycenter", "justifyright", "insertorderedlist", "insertunorderedlist", "blockquote", 'formatmatch', "removeformat", 'autotypeset', 'inserttable', "pasteplain", "wordimage", "searchreplace", "map", "preview", "fullscreen"], ['insertcode', 'paragraph', "fontfamily", "fontsize", 'link', 'unlink', 'insertimage', 'insertvideo', 'attachment', 'emotion', "date", "time"]],
+    "mini": [['source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'formatmatch', 'autotypeset', '|', 'forecolor', 'backcolor', '|', 'link', 'unlink', '|', 'simpleupload', 'attachment']],
+    "normal": [['source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'removeformat', 'formatmatch', 'autotypeset', '|', 'forecolor', 'backcolor', '|', 'link', 'unlink', '|', 'simpleupload', 'emotion', 'attachment', '|', 'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols']]
+}
 
 # 默认的Ueditor设置，请参见ueditor.config.js
 UEditorSettings = {
@@ -181,19 +94,12 @@ UEditorUploadSettings = {
 }
 
 
-# 修改前的
 # 更新配置：从用户配置文件settings.py重新读入配置UEDITOR_SETTINGS,覆盖默认
-# def UpdateUserSettings():
-#     UserSettings = getattr(gSettings, "UEDITOR_SETTINGS", {}).copy()
-#     if UserSettings.get("config", None):
-#         UEditorSettings.update(UserSettings["config"])
-#     if UserSettings.get("upload", None):
-#         UEditorUploadSettings.update(UserSettings["upload"])
 def UpdateUserSettings():
     UserSettings = getattr(gSettings, "UEDITOR_SETTINGS", {}).copy()
-    if "config" in UserSettings:
+    if 'config' in UserSettings:
         UEditorSettings.update(UserSettings["config"])
-    if "upload" in UserSettings:
+    if 'upload' in UserSettings:
         UEditorUploadSettings.update(UserSettings["upload"])
 
 
@@ -201,13 +107,7 @@ def UpdateUserSettings():
 UpdateUserSettings()
 
 
-# 修改前的
 # 取得配置项参数
-# def GetUeditorSettings(key, default=None):
-#     if UEditorSettings.get(key, None):
-#         return UEditorSettings[key]
-#     else:
-#         return default
 def GetUeditorSettings(key, default=None):
     if key in UEditorSettings:
         return UEditorSettings[key]

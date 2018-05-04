@@ -1,41 +1,45 @@
-# coding: utf-8
-
-
+# -*- coding: utf-8 -*-
 # 文件大小类
+from django.utils import six
+
+if six.PY3:
+    long = int
+
+
 class FileSize():
     SIZE_UNIT = {
-        "Byte": 1,
-        "KB": 1024,
-        "MB": 1048576,
-        "GB": 1073741824,
-        "TB": 1099511627776
+        "Byte": 1, "KB": 1024, "MB": 1048576,
+        "GB": 1073741824, "TB": 1099511627776
     }
 
     def __init__(self, size):
-        self._size = FileSize.Format(size)
+        self.size = long(FileSize.Format(size))
 
     @staticmethod
     def Format(size):
         import re
-        size_Byte = 0
-        if isinstance(size, int):
-            size_Byte = size
-        elif isinstance(size, str):
-            oSize = size.lstrip().upper().replace(" ", "")
-            # 增加检查是否是全数字类型的字符串，添加默认的单位Byte
-            if oSize.isdigit():
-                size_Byte = int(oSize)
-            pattern = re.compile(
-                r"(\d*\.?(?=\d)\d*)(byte|kb|mb|gb|tb)", re.I)
-            match = pattern.match(oSize)
-            if match:
-                m_size, m_unit = match.groups()
-                if m_size.find(".") == -1:
-                    m_size = int(m_size)
+        if isinstance(size, six.integer_types):
+            return size
+        else:
+            if not isinstance(size, six.string_types):
+                return 0
+            else:
+                oSize = size.lstrip().upper().replace(" ", "")
+                pattern = re.compile(
+                    r"(\d*\.?(?=\d)\d*)(byte|kb|mb|gb|tb)", re.I)
+                match = pattern.match(oSize)
+                if match:
+                    m_size, m_unit = match.groups()
+                    if m_size.find(".") == -1:
+                        m_size = long(m_size)
+                    else:
+                        m_size = float(m_size)
+                    if m_unit != "BYTE":
+                        return m_size * FileSize.SIZE_UNIT[m_unit]
+                    else:
+                        return m_size
                 else:
-                    m_size = float(m_size)
-                size_Byte = m_size * FileSize.SIZE_UNIT[m_unit]
-        return size_Byte
+                    return 0
 
     # 返回字节为单位的值
     @property
@@ -44,7 +48,10 @@ class FileSize():
 
     @size.setter
     def size(self, newsize):
-        self._size = FileSize(newsize)
+        try:
+            self._size = long(newsize)
+        except:
+            self._size = 0
 
     # 返回带单位的自动值
     @property
@@ -59,13 +66,12 @@ class FileSize():
             unit = "GB"
         else:
             unit = "TB"
-        print(unit)
 
         if (self.size % FileSize.SIZE_UNIT[unit]) == 0:
             return "%s%s" % ((self.size / FileSize.SIZE_UNIT[unit]), unit)
         else:
-            return "%0.2f%s" % (
-                round(float(self.size) / float(FileSize.SIZE_UNIT[unit]), 2), unit)
+            return "%0.2f%s" % (round(float(self.size) / float(
+                FileSize.SIZE_UNIT[unit]), 2), unit)
 
     def __str__(self):
         return self.FriendValue

@@ -1,11 +1,6 @@
-# coding:utf-8
-try:
-    # python3
-    from urllib.request import urljoin as urljoin
-except:
-    # python2
-    from urllib import basejoin as urljoin
+# -*- coding: utf-8 -*-
 from . import settings as USettings
+from django.utils.six.moves.urllib.parse import urljoin
 
 
 class UEditorEventHandler(object):
@@ -30,12 +25,8 @@ class UEditorEventHandler(object):
                 event_code = getattr(self, event)()
                 if event_code:
                     event_code = event_code % {"editor": editorID}
-                    event_codes.append(
-                        jscode % {
-                            "editor": editorID,
-                            "event": event[
-                                3:],
-                            "event_code": event_code})
+                    event_codes.append(jscode % {"editor": editorID, "event": event[
+                                       3:], "event_code": event_code})
             except:
                 pass
 
@@ -86,7 +77,7 @@ class UEditorCommand(object):
         queryvalue_command = self.onExecuteQueryvalueCommand()
         cmds = []
         if cmd or ajax_cmd:
-            cmds.append(u"""execCommand: function() {
+            cmds.append( u"""execCommand: function() {
                     %(exec_cmd)s
                     %(exec_ajax_cmd)s
                 }
@@ -150,7 +141,7 @@ class UEditorButtonCommand(UEditorCommand):
             var btn = new UE.ui.Button({
                 name: uiName,
                 title: "%(title)s",
-                cssRules: "background-image:url('%(icon)s')!important;",
+                cssRules: "background-images:url('%(icon)s')!important;",
                 onclick: function() {
                     %(onclick)s
                 }

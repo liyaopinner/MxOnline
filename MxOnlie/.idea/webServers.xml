@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ee7ed2df-0eff-499c-b3b5-79890cfb34a6" name="39.104.13.197" url="http://39.104.13.197">
+        <fileTransfer host="39.104.13.197" port="22" rootFolder="/root/projects/MxOnline" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
