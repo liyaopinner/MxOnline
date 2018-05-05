@@ -15,6 +15,7 @@ from xadmin.views.base import csrf_protect_m, filter_hook
 from xadmin.views.edit import ModelFormAdminUtil
 from xadmin.views.list import EMPTY_CHANGELIST_VALUE
 from xadmin.layout import FormHelper
+from django.forms.widgets import Media
 
 
 class EditablePlugin(BaseAdminPlugin):
