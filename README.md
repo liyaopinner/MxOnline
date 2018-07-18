@@ -1,5 +1,5 @@
 # MxOnline
-慕课网django+xadmin打造生鲜电商源码(长期维护)
+慕课网django+xadmin打造在线教育平台源码(长期维护)
 
 # 2018-4-1 
   
